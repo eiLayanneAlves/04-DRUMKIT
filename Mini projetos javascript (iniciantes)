@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>DRUM KIT</title>
+   
+   <style>
+*{
+    margin: 0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+body{
+    background-image: url('./img/back.jpg');
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Open Sans', sans-serif;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+.title{
+    color: #ffcc00;
+    margin: 20vh auto;
+    font-size: calc(5vw + 20px);
+    text-shadow: 0 0 10px black,
+                 0 0 10px black,
+                 0 0 10px black;
+}
+
+.container{
+    width: 90vw;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+}
+.key{
+    display: flex;
+    width: 100px;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+    background-color: #000000BB;
+    color: white;
+    font-size: calc(3vw + 20px);
+    border: 3px solid white;
+    user-select: none;
+    cursor: pointer;
+    transition: transform .2s;
+}
+
+.active{
+    transform: scale(1.3);
+    border-color: #ffcc00;
+    box-shadow: 0 0 50px #ffcc00;
+}
+   </style>
+    </head>
+    <body>
+        <main>
+            <diV class="title">DRUM KIT</div> 
+            <div class="container" id="container">
+            </div>
+            <script src="./index.js">
+            
+            'use strict';
+
+const sons = {
+    'A': 'boom.wav',
+    'S': 'clap.wav',
+    'D': 'hihat.wav',
+    'F': 'kick.wav',
+    'G': 'openhat.wav',
+    'H': 'ride.wav',
+    'J': 'snare.wav',
+    'K': 'tink.wav',
+    'L': 'tom.wav'
+}
+
+const criarDiv = (texto) => {
+    const div = document.createElement('div');
+    div.classList.add('key');
+    div.textContent = texto;
+    div.id = texto;
+    document.getElementById('container').appendChild(div);
+}
+
+const exibir = (sons) => Object.keys(sons).forEach(criarDiv);
+
+const tocarSom = (letra) => {
+    const audio = new Audio(`./sounds/${sons[letra]}`);
+    audio.play();
+}
+
+const adicionarEfeito = (letra) => document.getElementById(letra)
+                                           .classList.toggle('active');
+
+const removerEfeito = (letra) => {
+    const div = document.getElementById(letra);
+    const removeActive = () => div.classList.remove('active');
+    div.addEventListener('transitionend',removeActive);
+};
+
+const ativarDiv = (evento) => {
+
+    const letra = evento.type == 'click' ? evento.target.id : evento.key.toUpperCase();
+    
+    const letraPermitida = sons.hasOwnProperty(letra);
+    if (letraPermitida){
+        adicionarEfeito(letra);
+        tocarSom(letra);
+        removerEfeito(letra);
+    }
+}
+
+
+exibir(sons);
+document.getElementById('container')
+        .addEventListener('click', ativarDiv);
+
+window.addEventListener('keyup',ativarDiv);
+            </script>
+        </main>
+    </body>
+</html>
